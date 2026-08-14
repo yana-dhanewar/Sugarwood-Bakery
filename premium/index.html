@@ -439,6 +439,128 @@ footer{padding:2rem 3rem;border-top:1px solid var(--border);display:flex;justify
   line-height:1.7;
   margin-top:.35rem;
 }
+
+
+  /* ===== DEMO NOTICE SPOTLIGHT ===== */
+
+.demo-spotlight-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.42);
+  z-index:9998;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .35s ease;
+}
+
+.demo-spotlight-overlay.active{
+  opacity:1;
+}
+
+.demo-info.demo-spotlight-target{
+  position:relative;
+  z-index:9999;
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,.18),
+    0 0 28px rgba(212,175,55,.35);
+  animation:demoNoticePulse 2s ease-in-out infinite;
+}
+
+@keyframes demoNoticePulse{
+  0%,100%{
+    box-shadow:
+      0 0 0 2px rgba(255,255,255,.15),
+      0 0 22px rgba(212,175,55,.28);
+  }
+  50%{
+    box-shadow:
+      0 0 0 2px rgba(255,255,255,.28),
+      0 0 38px rgba(212,175,55,.48);
+  }
+}
+
+.demo-spotlight-callout{
+  position:fixed;
+  z-index:10000;
+  width:min(330px,calc(100vw - 40px));
+  padding:1.2rem 1.25rem;
+  background:var(--bg2);
+  border:1px solid var(--border);
+  box-shadow:0 18px 50px rgba(0,0,0,.35);
+  border-radius:14px;
+  opacity:0;
+  transform:translateY(10px);
+  transition:opacity .35s ease,transform .35s ease;
+}
+
+.demo-spotlight-callout.active{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.demo-spotlight-callout::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:-10px;
+  width:18px;
+  height:18px;
+  background:var(--bg2);
+  border-right:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  transform:translateX(-50%) rotate(45deg);
+}
+
+.demo-spotlight-kicker{
+  font-size:.65rem;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--gold);
+  margin-bottom:.55rem;
+}
+
+.demo-spotlight-title{
+  font-family:inherit;
+  font-size:1rem;
+  color:var(--text);
+  margin-bottom:.45rem;
+}
+
+.demo-spotlight-text{
+  font-size:.76rem;
+  color:var(--text2);
+  line-height:1.65;
+  margin-bottom:1rem;
+}
+
+.demo-spotlight-button{
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--text);
+  padding:.55rem .8rem;
+  border-radius:8px;
+  font-size:.72rem;
+  cursor:pointer;
+  transition:all .2s ease;
+}
+
+.demo-spotlight-button:hover{
+  background:var(--bg);
+  transform:translateY(-1px);
+}
+
+@media(max-width:600px){
+  .demo-spotlight-callout{
+    left:20px !important;
+    right:20px;
+    width:auto;
+  }
+
+  .demo-spotlight-callout::after{
+    display:none;
+  }
+}
+  
 .mform-btns{display:flex;gap:.7rem;margin-top:1.4rem;flex-wrap:wrap}
 .order-submit{margin-top:1.4rem;padding:.85rem 2rem;background:var(--accent);color:var(--bg);font-size:.75rem;letter-spacing:.15em;border:none;cursor:pointer}
 .order-submit:hover{background:var(--accent2)}
@@ -1979,5 +2101,79 @@ if(orders.length===0){
   orders.push(...demo);saveState();
 }
 </script>
+
+<!-- DEMO NOTICE SPOTLIGHT -->
+<div class="demo-spotlight-overlay" id="demoSpotlightOverlay"></div>
+
+<div class="demo-spotlight-callout" id="demoSpotlightCallout">
+  <div class="demo-spotlight-kicker">✦ Tiny but important note</div>
+
+  <div class="demo-spotlight-title">
+    Before you explore...
+  </div>
+
+  <div class="demo-spotlight-text">
+    There's one important thing you should know about this demo.
+    Please take a moment to read the highlighted notice below.
+  </div>
+
+  <button class="demo-spotlight-button" id="demoSpotlightAcknowledge">
+    Got it — I'll read it →
+  </button>
+</div>
+
+<script>
+(function(){
+  const overlay = document.getElementById("demoSpotlightOverlay");
+  const callout = document.getElementById("demoSpotlightCallout");
+  const acknowledge = document.getElementById("demoSpotlightAcknowledge");
+  const target = document.querySelector(".demo-info");
+
+  if(!overlay || !callout || !acknowledge || !target) return;
+
+  function positionCallout(){
+    const rect = target.getBoundingClientRect();
+
+    const calloutWidth = Math.min(330, window.innerWidth - 40);
+
+    let left = rect.left + (rect.width / 2) - (calloutWidth / 2);
+    let top = rect.top - 185;
+
+    left = Math.max(20, Math.min(left, window.innerWidth - calloutWidth - 20));
+    top = Math.max(20, top);
+
+    callout.style.left = left + "px";
+    callout.style.top = top + "px";
+  }
+
+  function openSpotlight(){
+    positionCallout();
+
+    overlay.classList.add("active");
+    target.classList.add("demo-spotlight-target");
+
+    requestAnimationFrame(function(){
+      callout.classList.add("active");
+    });
+  }
+
+  function closeSpotlight(){
+    callout.classList.remove("active");
+    target.classList.remove("demo-spotlight-target");
+
+    setTimeout(function(){
+      overlay.classList.remove("active");
+    }, 250);
+  }
+
+  window.addEventListener("resize", positionCallout);
+  window.addEventListener("scroll", positionCallout);
+
+  acknowledge.addEventListener("click", closeSpotlight);
+
+  setTimeout(openSpotlight, 700);
+})();
+</script>
+
 </body>
 </html>
