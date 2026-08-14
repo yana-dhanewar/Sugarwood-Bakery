@@ -77,6 +77,23 @@ input:disabled,select:disabled{opacity:.45;cursor:not-allowed;background:var(--b
 .weight-select{width:auto;padding:.35rem .6rem;font-size:.72rem;margin-top:.5rem}
 
 /* NAV */
+  .demo-badge{
+  border:1px solid var(--gold);
+  background:transparent;
+  color:var(--gold);
+  padding:.38rem .65rem;
+  font-family:inherit;
+  font-size:.62rem;
+  letter-spacing:.14em;
+  cursor:pointer;
+  transition:all .2s;
+}
+
+.demo-badge:hover{
+  background:var(--gold);
+  color:var(--accent);
+}
+  
 .topnav{display:flex;justify-content:space-between;align-items:center;padding:1rem 3rem;background:var(--bg);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
 .nav-logo{font-size:1.1rem;letter-spacing:.14em;color:var(--text);cursor:pointer}
 .nav-links{display:flex;gap:1.8rem;font-size:.78rem;letter-spacing:.1em;color:var(--text2)}
@@ -397,6 +414,31 @@ footer{padding:2rem 3rem;border-top:1px solid var(--border);display:flex;justify
 .modal{background:var(--bg);width:92%;max-width:480px;padding:2rem;position:relative;max-height:92vh;overflow-y:auto}
 .modal h3{font-size:.95rem;letter-spacing:.08em;color:var(--text);margin-bottom:1.3rem}
 .modal-close{position:absolute;top:.8rem;right:1rem;background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text3)}
+.demo-modal{
+  max-width:520px;
+}
+
+.demo-info{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  padding:1rem;
+  margin-top:.8rem;
+}
+
+.demo-info strong{
+  display:block;
+  font-size:.65rem;
+  letter-spacing:.12em;
+  color:var(--gold);
+  margin-bottom:.4rem;
+}
+
+.demo-info p{
+  font-size:.76rem;
+  color:var(--text2);
+  line-height:1.7;
+  margin-top:.35rem;
+}
 .mform-btns{display:flex;gap:.7rem;margin-top:1.4rem;flex-wrap:wrap}
 .order-submit{margin-top:1.4rem;padding:.85rem 2rem;background:var(--accent);color:var(--bg);font-size:.75rem;letter-spacing:.15em;border:none;cursor:pointer}
 .order-submit:hover{background:var(--accent2)}
@@ -436,6 +478,7 @@ footer{padding:2rem 3rem;border-top:1px solid var(--border);display:flex;justify
     <div class="nav-logo" onclick="pubScroll('hero')">SUGARWOOD BAKERY</div>
     <div class="nav-links"><a onclick="pubScroll('about')">About</a><a onclick="pubScroll('shop')">Shop</a><a onclick="pubScroll('gallery')">Gallery</a><a onclick="pubScroll('reviews')">Reviews</a><a onclick="pubScroll('contact')">Contact</a></div>
     <div class="nav-right">
+      <button class="demo-badge" onclick="openDemoNotice()">DEMO</button>
       <button class="dark-toggle" onclick="toggleDark()">🌙</button>
       <div class="nav-cart" onclick="toggleCart()">🛒 Cart <span class="cart-count" id="cc1">0</span></div>
       <button class="btn" id="pub-owner-back" style="display:none" onclick="showScreen('owner')">← Owner Dashboard</button>
@@ -946,6 +989,49 @@ footer{padding:2rem 3rem;border-top:1px solid var(--border);display:flex;justify
   </div>
 </div>
 
+  <!-- DEMO NOTICE -->
+<div class="modal-bg" id="demo-notice" onclick="closeDemoNotice(event)">
+  <div class="modal demo-modal">
+    <button class="modal-close" onclick="closeDemoNotice2()">✕</button>
+
+    <div class="sec-label">SUGARWOOD BAKERY · DEMO</div>
+
+    <h3 style="font-size:1.2rem;margin-bottom:.8rem;">
+      Welcome to the Premium Demo
+    </h3>
+
+    <p style="font-size:.82rem;color:var(--text2);line-height:1.8;margin-bottom:1rem;">
+      You're exploring a simulated bakery ordering and business
+      management application created for demonstration purposes.
+    </p>
+
+    <div class="demo-info">
+      <strong>CONTACT & WHATSAPP</strong>
+      <p>
+        The address, phone number, email and WhatsApp contact shown
+        throughout the website are dummy information.
+      </p>
+      <p>
+        The WhatsApp button opens WhatsApp using the same dummy number.
+        <strong>Please do not call or send messages to it.</strong>
+      </p>
+    </div>
+
+    <div class="demo-info">
+      <strong>SIMULATED FEATURES</strong>
+      <p>
+        Payments, authentication, password recovery and other
+        business functions are simulated for this demonstration.
+      </p>
+    </div>
+
+    <button class="btn btn-fill" style="margin-top:1.2rem;width:100%;justify-content:center;"
+            onclick="closeDemoNotice2()">
+      GOT IT · EXPLORE
+    </button>
+  </div>
+</div>
+  
 <script>
 const CE={Cake:'🎂',Cupcake:'🧁',Cookie:'🍪',Donut:'🍩',Pastry:'🥐'};
 const CAKE_WEIGHTS=[{v:0.25,l:'¼ kg'},{v:0.5,l:'½ kg'},{v:1,l:'1 kg'},{v:1.5,l:'1.5 kg'},{v:2,l:'2 kg'},{v:3,l:'3 kg'},{v:4,l:'4 kg'},{v:5,l:'5 kg'}];
@@ -1854,6 +1940,21 @@ function checkHours(){
 // ── MODALS ──
 function closeMod(e,id){if(e.target===document.getElementById(id))document.getElementById(id).classList.remove('open');}
 function closeMod2(id){document.getElementById(id).classList.remove('open');}
+
+  // ── DEMO NOTICE ──
+function openDemoNotice(){
+  document.getElementById('demo-notice').classList.add('open');
+}
+
+function closeDemoNotice(e){
+  if(e.target === document.getElementById('demo-notice')){
+    document.getElementById('demo-notice').classList.remove('open');
+  }
+}
+
+function closeDemoNotice2(){
+  document.getElementById('demo-notice').classList.remove('open');
+}
 
 // ── TOAST ──
 let toastTimer=null,undoFn=null;
